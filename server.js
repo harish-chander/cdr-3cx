@@ -169,7 +169,7 @@ const monitor = function (client) {
       } else {
         //This promise returns an array of the CDR logs that are unsent
         const dbquery = new Promise((resolve, reject) => {
-          BD.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
+          DB.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
             if (err) {
               reject(err);
               return null;
