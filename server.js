@@ -48,7 +48,7 @@ let buffer = Buffer.from("");
 const server = net.createServer(async connection => {
   try {
     const getAllUnsentToDB = new Promise((resolve, reject) => {
-      BD.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
+      DB.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
         if (err) {
           reject(err);
           return null;
@@ -142,8 +142,9 @@ const monitor = function (client) {
       appendFile(data.toString());
 
       // This promise will save all the unsent data to the DB
+      // This promise will save all the unsent data to the DB
       const saveUnsentToDB = new Promise((resolve, reject) => {
-        BD.query(
+        DB.query(
           `INSERT INTO logs (id, cdr, sent) VALUES ("${v4()}", "${data.toString()}", 0)`,
           (err, res, fields) => {
             if (err) {
