@@ -191,6 +191,7 @@ const monitor = function (client) {
         const unsentDataDBBuffer = Buffer.from(unsentData.join(" "));
 
         buffer = Buffer.concat([buffer, data, unsentDataDBBuffer]);
+        console.log(buffer.toString());
         connections.forEach(conn => {
           conn.write(buffer);
           //Query to update all the data that has the status of not sent in the DB
