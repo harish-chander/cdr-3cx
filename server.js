@@ -64,6 +64,19 @@ const server = net.createServer(async connection => {
       });
     });
 
+    const updateDB = new Promise((resolve, reject) => {
+      DB.query(
+        `UPDATE logs SET sent = 1 WHERE sent = 0`,
+        (err, res, fields) => {
+          if (err) {
+            reject(err);
+            return null;
+          }
+          resolve(true);
+        }
+      );
+    });
+
     console.log(
       "Connection made by client! - " +
       moment().format("MMMM Do YYYY, h:mm:ss a")
@@ -76,6 +89,8 @@ const server = net.createServer(async connection => {
       "Unsaved data has been sent to the client! - " +
       moment().format("MMMM Do YYYY, h:mm:ss a")
     );
+
+    await updateDB;
 
     connections.push(connection);
 
