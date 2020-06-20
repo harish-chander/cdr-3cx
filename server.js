@@ -80,10 +80,10 @@ const server = net.createServer(async connection => {
     //   );
     // });
     //
-    // console.log(
-    //   "Connection made by client! - " +
-    //   moment().format("MMMM Do YYYY, h:mm:ss a")
-    // );
+    console.log(
+      "Connection made by client! - " +
+      moment().format("MMMM Do YYYY, h:mm:ss a")
+    );
     //
     // const unsentData = await getAllUnsentToDB;
     //
