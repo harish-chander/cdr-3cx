@@ -47,50 +47,53 @@ let buffer = Buffer.from("");
 
 const server = net.createServer(async connection => {
   try {
-    const getAllUnsentToDB = new Promise((resolve, reject) => {
-      DB.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
-        if (err) {
-          reject(err);
-          return null;
-        }
 
-        let stringArr = [];
+    //COMMENTED OUT IN CASE NEEDED IN THE FUTURE
 
-        res.forEach(item => {
-          stringArr.push(item.cdr);
-        });
-
-        resolve(stringArr);
-      });
-    });
-
-    const updateDB = new Promise((resolve, reject) => {
-      DB.query(
-        `UPDATE logs SET sent = 1 WHERE sent = 0`,
-        (err, res, fields) => {
-          if (err) {
-            reject(err);
-            return null;
-          }
-          resolve(true);
-        }
-      );
-    });
-
-    console.log(
-      "Connection made by client! - " +
-      moment().format("MMMM Do YYYY, h:mm:ss a")
-    );
-
-    const unsentData = await getAllUnsentToDB;
-
-    connection.write(Buffer.from(unsentData.join(" ")));
-    console.log(
-      "Unsaved data has been sent to the client! - " +
-      moment().format("MMMM Do YYYY, h:mm:ss a")
-    );
-
-    await updateDB;
+    // const getAllUnsentToDB = new Promise((resolve, reject) => {
+    //   DB.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
+    //     if (err) {
+    //       reject(err);
+    //       return null;
+    //     }
+    //
+    //     let stringArr = [];
+    //
+    //     res.forEach(item => {
+    //       stringArr.push(item.cdr);
+    //     });
+    //
+    //     resolve(stringArr);
+    //   });
+    // });
+    //
+    // const updateDB = new Promise((resolve, reject) => {
+    //   DB.query(
+    //     `UPDATE logs SET sent = 1 WHERE sent = 0`,
+    //     (err, res, fields) => {
+    //       if (err) {
+    //         reject(err);
+    //         return null;
+    //       }
+    //       resolve(true);
+    //     }
+    //   );
+    // });
+    //
+    // console.log(
+    //   "Connection made by client! - " +
+    //   moment().format("MMMM Do YYYY, h:mm:ss a")
+    // );
+    //
+    // const unsentData = await getAllUnsentToDB;
+    //
+    // connection.write(Buffer.from(unsentData.join(" ")));
+    // console.log(
+    //   "Unsaved data has been sent to the client! - " +
+    //   moment().format("MMMM Do YYYY, h:mm:ss a")
+    // );
+    //
+    // await updateDB;
 
     connections.push(connection);
 
