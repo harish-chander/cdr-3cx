@@ -216,7 +216,7 @@ const monitor = function (client) {
           //Query to update all the data that has the status of not sent in the DB
           unsentData.idArr.forEach(id => {
             DB.query(
-              `UPDATE logs SET sent = 1 WHERE id = ${id}`,
+              `UPDATE logs SET sent = 1 WHERE id = "${id}"`,
               (err, res, field) => {
                 if (err) {
                   console.log(err);
