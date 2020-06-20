@@ -116,7 +116,7 @@ server.listen(3000, () => {
 //CLIENT
 
 //Original
-const options = {port: 7000, host: "10.7.8.5"};
+const options = {port: 7000, host: "10.7.0.5"};
 
 //Test
 // const options = {port: 4000, host: "localhost"};
@@ -191,37 +191,44 @@ const monitor = function (client) {
               return null;
             }
 
-            let stringArr = [];
+            let data = {
+              stringArr: [],
+              idArr: []
+            };
 
             res.forEach(item => {
-              stringArr.push(item.cdr);
+              data.stringArr.push(item.cdr);
+              data.idArr.push(item.id);
             });
 
-            resolve(stringArr);
+            resolve(data);
           });
         });
 
         const unsentData = await dbquery;
 
-        const unsentDataDBBuffer = Buffer.from(unsentData.join(" "));
+        const unsentDataDBBuffer = Buffer.from(unsentData.stringArr.join(" "));
 
-        buffer = Buffer.concat([buffer, data, unsentDataDBBuffer]);
+        buffer = Buffer.concat([buffer, unsentDataDBBuffer]);
         console.log(buffer.toString());
         connections.forEach(conn => {
           conn.write(buffer);
           //Query to update all the data that has the status of not sent in the DB
-          DB.query(
-            `UPDATE logs SET sent = 1 WHERE sent = 0`,
-            (err, res, field) => {
-              if (err) {
-                console.log(err);
-                return null;
+          unsentData.idArr.forEach(id => {
+            DB.query(
+              `UPDATE logs SET sent = 1 WHERE id = ${id}`,
+              (err, res, field) => {
+                if (err) {
+                  console.log(err);
+                  return null;
+                }
+                console.log(
+                  "DB Values updated! There are no more unsent records."
+                );
               }
-              console.log(
-                "DB Values updated! There are no more unsent records."
-              );
-            }
-          );
+            );
+          });
+
           console.log(
             "Data has been sent to JDS" +
             moment().format("MMMM Do YYYY, h:mm:ss a")
