@@ -47,7 +47,6 @@ let buffer = Buffer.from("");
 
 const server = net.createServer(async connection => {
   try {
-
     //COMMENTED OUT IN CASE NEEDED IN THE FUTURE
 
     // const getAllUnsentToDB = new Promise((resolve, reject) => {
@@ -102,8 +101,8 @@ const server = net.createServer(async connection => {
         "Client has disconnected! - " +
         moment().format("MMMM Do YYYY, h:mm:ss a")
       );
-      connection.end();
       connections.pop();
+      connection.end();
     });
   } catch (e) {
     console.log(e);
