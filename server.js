@@ -104,6 +104,14 @@ const server = net.createServer(async connection => {
       connections.pop();
       connection.end();
     });
+
+    connection.on("end", err => {
+      console.log(
+        "Client has disconnected! - " +
+        moment().format("MMMM Do YYYY, h:mm:ss a")
+      );
+      connections.pop();
+    });
   } catch (e) {
     console.log(e);
   }
