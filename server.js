@@ -252,6 +252,7 @@ const monitor = function (client) {
   });
   client.on("error", err => {
     console.log(err);
+    connect();
   });
   client.on("end", () => {
     console.log(
