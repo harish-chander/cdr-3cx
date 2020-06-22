@@ -289,6 +289,7 @@ const monitor = function (client) {
   });
   client.on("error", err => {
     console.log(err);
+    console.log("This error occured at line 291");
     setInterval(() => {
       sendEmail(
         "Server disconnected",
