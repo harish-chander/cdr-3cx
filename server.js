@@ -135,6 +135,10 @@ const server = net.createServer(connection => {
     console.log(
       "Client has disconnected! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
     );
+    sendEmail(
+      "JDS Disconnected",
+      "Greetings, \n\r\n\r The JDS server has disconnected from CDR (line 140).\n\r\n\rThank you."
+    );
     connections.pop();
     connection.end();
   });
@@ -142,6 +146,10 @@ const server = net.createServer(connection => {
   connection.on("end", err => {
     console.log(
       "Client has disconnected! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
+    );
+    sendEmail(
+      "JDS Disconnected",
+      "Greetings, \n\r\n\r The JDS server has disconnected from CDR (line 152).\n\r\n\rThank you."
     );
     connections.pop();
   });
