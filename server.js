@@ -82,76 +82,69 @@ DB.connect(err => {
 const connections = [];
 let buffer = Buffer.from("");
 
-const server = net.createServer(async connection => {
-  try {
-    //COMMENTED OUT IN CASE NEEDED IN THE FUTURE
+const server = net.createServer(connection => {
+  //COMMENTED OUT IN CASE NEEDED IN THE FUTURE
 
-    // const getAllUnsentToDB = new Promise((resolve, reject) => {
-    //   DB.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
-    //     if (err) {
-    //       reject(err);
-    //       return null;
-    //     }
-    //
-    //     let stringArr = [];
-    //
-    //     res.forEach(item => {
-    //       stringArr.push(item.cdr);
-    //     });
-    //
-    //     resolve(stringArr);
-    //   });
-    // });
-    //
-    // const updateDB = new Promise((resolve, reject) => {
-    //   DB.query(
-    //     `UPDATE logs SET sent = 1 WHERE sent = 0`,
-    //     (err, res, fields) => {
-    //       if (err) {
-    //         reject(err);
-    //         return null;
-    //       }
-    //       resolve(true);
-    //     }
-    //   );
-    // });
-    //
+  // const getAllUnsentToDB = new Promise((resolve, reject) => {
+  //   DB.query(`SELECT * FROM logs WHERE sent = 0`, (err, res, fields) => {
+  //     if (err) {
+  //       reject(err);
+  //       return null;
+  //     }
+  //
+  //     let stringArr = [];
+  //
+  //     res.forEach(item => {
+  //       stringArr.push(item.cdr);
+  //     });
+  //
+  //     resolve(stringArr);
+  //   });
+  // });
+  //
+  // const updateDB = new Promise((resolve, reject) => {
+  //   DB.query(
+  //     `UPDATE logs SET sent = 1 WHERE sent = 0`,
+  //     (err, res, fields) => {
+  //       if (err) {
+  //         reject(err);
+  //         return null;
+  //       }
+  //       resolve(true);
+  //     }
+  //   );
+  // });
+  //
+  console.log(
+    "Connection made by client! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
+  );
+  //
+  // const unsentData = await getAllUnsentToDB;
+  //
+  // connection.write(Buffer.from(unsentData.join(" ")));
+  // console.log(
+  //   "Unsaved data has been sent to the client! - " +
+  //   moment().format("MMMM Do YYYY, h:mm:ss a")
+  // );
+  //
+  // await updateDB;
+
+  connections.push(connection);
+
+  connection.on("error", err => {
     console.log(
-      "Connection made by client! - " +
-      moment().format("MMMM Do YYYY, h:mm:ss a")
+      "Client has disconnected! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
     );
-    //
-    // const unsentData = await getAllUnsentToDB;
-    //
-    // connection.write(Buffer.from(unsentData.join(" ")));
-    // console.log(
-    //   "Unsaved data has been sent to the client! - " +
-    //   moment().format("MMMM Do YYYY, h:mm:ss a")
-    // );
-    //
-    // await updateDB;
+    connections.pop();
+    connection.end();
+  });
 
-    connections.push(connection);
-
-    connection.on("error", err => {
-      console.log(
-        "Client has disconnected! - " +
-        moment().format("MMMM Do YYYY, h:mm:ss a")
-      );
-      connections.pop();
-      connection.end();
-    });
-
-    connection.on("end", err => {
-      console.log(
-        "Client has disconnected! - " +
-        moment().format("MMMM Do YYYY, h:mm:ss a")
-      );
-      connections.pop();
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  connection.on("end", err => {
+    console.log(
+      "Client has disconnected! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
+    );
+    connections.pop();
+  });
 });
 
 server.listen(3000, () => {
@@ -288,14 +281,12 @@ const monitor = function (client) {
     }
   });
   client.on("error", err => {
+    sendEmail(
+      "Server disconnected",
+      "Dear sir, \n\r\n\r3CX has closed the connection to the CDR program.\n\r\n\rThank you\n\r- The CDR Application"
+    );
     console.log(err);
     console.log("This error occured at line 291");
-    setInterval(() => {
-      sendEmail(
-        "Server disconnected",
-        "Dear sir, \n\r\n\r3CX has closed the connection to the CDR program.\n\r\n\rThank you\n\r- The CDR Application"
-      );
-    }, 1000 * 60);
 
     connect();
   });
