@@ -4,6 +4,43 @@ const fs = require("fs");
 const moment = require("moment");
 const {v4} = require("uuid");
 const sql = require("mysql");
+const mailer = require("nodemailer");
+
+const transporter = mailer.createTransport({
+  host: "mail.dhinet.net.mv",
+  port: 25,
+  secure: false
+});
+
+transporter.verify((e, success) => {
+  if (e) {
+    console.log(e);
+  } else {
+    console.log("Ready to send mails");
+  }
+});
+
+const sendEmail = (subject, message) => {
+  transporter.sendMail(
+    {
+      from: "3CX-CDR <cdr@maafushivaru.com>",
+      to: "it.manager@maafushivaru.com, it.assistant@maafushivaru.com",
+      subject: subject,
+      text: message
+    },
+    err => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("The test email has been sent!");
+    }
+  );
+};
+
+sendEmail(
+  "Server disconnected",
+  "Dear sir, \n\r\n\r3CX has closed the connection to the CDR program.\n\r\n\rThank you\n\r- The CDR Application"
+);
 
 //DATABASE
 const DB = sql.createConnection({
@@ -126,7 +163,7 @@ server.listen(3000, () => {
 //CLIENT
 
 //Original
-const options = {port: 4000, host: "10.7.8.5"};
+const options = {port: 4000, host: "10.0.8.5"};
 
 //Test
 // const options = {port: 4000, host: "localhost"};
@@ -252,6 +289,13 @@ const monitor = function (client) {
   });
   client.on("error", err => {
     console.log(err);
+    setInterval(() => {
+      sendEmail(
+        "Server disconnected",
+        "Dear sir, \n\r\n\r3CX has closed the connection to the CDR program.\n\r\n\rThank you\n\r- The CDR Application"
+      );
+    }, 1000 * 60);
+
     connect();
   });
   client.on("end", () => {

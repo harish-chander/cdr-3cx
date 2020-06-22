@@ -12,6 +12,7 @@
   "dependencies": {
     "moment": "^2.26.0",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.4.10",
     "uuid": "^8.1.0"
   }
 }
