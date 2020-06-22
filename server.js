@@ -37,10 +37,10 @@ const sendEmail = (subject, message) => {
   );
 };
 
-sendEmail(
-  "Server disconnected",
-  "Dear sir, \n\r\n\r3CX has closed the connection to the CDR program.\n\r\n\rThank you\n\r- The CDR Application"
-);
+// sendEmail(
+//   "Server disconnected",
+//   "Dear sir, \n\r\n\r3CX has closed the connection to the CDR program.\n\r\n\rThank you\n\r- The CDR Application"
+// );
 
 //DATABASE
 const DB = sql.createConnection({
