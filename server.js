@@ -174,7 +174,7 @@ server.listen(3000, () => {
 //CLIENT
 
 //Original
-const options = {port: 4000, host: "10.0.8.5"};
+const options = {port: 4000, host: "10.7.8.5"};
 
 //Test
 // const options = {port: 4000, host: "localhost"};
