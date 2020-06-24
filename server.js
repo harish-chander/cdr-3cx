@@ -59,6 +59,14 @@ DB.connect(err => {
   console.log("Connected to the MYSQL DB");
 });
 
+//Keep DB alive TEST
+setInterval(() => {
+  DB.query(`SELECT 1 FROM logs`, (err, res, field) => {
+    if (err) return console.log(err);
+    console.log("Keep alive query for DB was run!");
+  });
+}, 1000 * 60 * 60 * 3);
+
 //TEST DATABASE QUERY
 
 // DB.query(`SELECT * FROM logs`, (err, results, field) => {
@@ -133,7 +141,8 @@ const server = net.createServer(connection => {
 
   connection.on("error", err => {
     console.log(
-      "Client has disconnected! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
+      "Client has disconnected! - (Line 136) " +
+      moment().format("MMMM Do YYYY, h:mm:ss a")
     );
     sendEmail(
       "JDS Disconnected",
@@ -145,7 +154,8 @@ const server = net.createServer(connection => {
 
   connection.on("end", err => {
     console.log(
-      "Client has disconnected! - " + moment().format("MMMM Do YYYY, h:mm:ss a")
+      "Client has disconnected! - (Line 149)" +
+      moment().format("MMMM Do YYYY, h:mm:ss a")
     );
     sendEmail(
       "JDS Disconnected",
@@ -164,7 +174,7 @@ server.listen(3000, () => {
 //CLIENT
 
 //Original
-const options = {port: 4000, host: "10.7.8.5"};
+const options = {port: 4000, host: "10.0.8.5"};
 
 //Test
 // const options = {port: 4000, host: "localhost"};
